@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/wasymshykh/binance-p2p-alert#readme",
   "dependencies": {
-    "axios": "^0.21.1"
+    "axios": "^0.21.1",
+    "sound-play": "^1.1.0"
   }
 }
