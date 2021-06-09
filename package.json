@@ -4,6 +4,7 @@
   "description": "P2P Alert for binance",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -25,6 +26,10 @@
   "homepage": "https://github.com/wasymshykh/binance-p2p-alert#readme",
   "dependencies": {
     "axios": "^0.21.1",
+    "chalk": "^4.1.1",
+    "enquirer": "^2.3.6",
+    "node-notifier": "^10.0.0",
+    "open": "^8.2.0",
     "sound-play": "^1.1.0"
   }
 }
