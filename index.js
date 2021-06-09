@@ -4,6 +4,7 @@ const path = require('path');
 const open = require('open');
 const notifier = require('node-notifier');
 const chalk = require('chalk');
+const { stdin } = require('process');
 
 const BINANCE_P2P_API = 'https://c2c.binance.com/bapi/c2c/v2/friendly/c2c/adv/search';
 
@@ -31,6 +32,11 @@ const ALERT_HANDLED = {};
 
 axios.defaults.timeout = 5000;
 const l = console.log;
+
+stdin.setRawMode(true).resume().setEncoding('utf8');
+stdin.on( 'data', (key) => {
+    if (key === '\u0003' || key.toString().toLowerCase() === 'q') {  l('\n👋 Bye bye!'); process.exit(); }
+});
 
 const fa = num => `${Number(num).toLocaleString()} ${ASSET_UNIT}`;
 const fb = num => `${Number(num).toLocaleString()} ${BASE_UNIT}`;
@@ -61,7 +67,6 @@ const generate_notification = function (message) {
         }
     });
 }
-
 
 const check_condition = (data, filtered_index) => {
     let satisfies = true;
@@ -128,7 +133,7 @@ const process_p2p = (response, cb) => {
     cb({status: true, data: {filtered: filtered, alerts: alerts}});
 }
 
-l(chalk.bold('👀 Watching...'));
+l(`${chalk.bold('👀 Watching...')} ${chalk.bold.red('🗙')}Press Q or ctrl+C to exit...\n`);
 
 setInterval(() => {
     
