@@ -1,8 +1,8 @@
 // price setup alert
-const ALERT = { price: { amount: 160, or_below: true}, limit: { amount: 10000, or_above: true} };
+const ALERT = { price: { amount: 164, or_below: true}, limit: { amount: 10000, or_above: true} };
 
 // delay (in second) to request the API
-const TIME = 5;
+const TIME = 3;
 
 // BASE_UBIT -> type of fiat currency
 const BASE_UNIT = "PKR";

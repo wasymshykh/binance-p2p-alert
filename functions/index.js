@@ -9,7 +9,7 @@ const { format_number, chalk } = require('../helpers');
 const play_sound = (volume = 0.5, type = 'reward') => {
     if (SOUNDS[type] === undefined) return false;
     let sound_file = SOUNDS[type];
-    sound.play(path.join(__dirname, 'assets', 'sound', sound_file), volume);
+    sound.play(path.join(__dirname, '../', 'assets', 'sound', sound_file), volume);
 }
 
 const send_notification = (message, link, app) => {
@@ -46,7 +46,9 @@ const process_p2p = (response, ALERT_HANDLED, cb) => {
         // checking for satisfied conditions for alert
         let check = check_condition(d, ALERT_HANDLED, filtered.length);
         if (check.status) { alerts.push(check.data); }
-
+        else {
+            d['qualifies'] = check.qualifies;
+        }
         filtered.push(d);
     });
 
@@ -74,11 +76,13 @@ const details_extract = (adv, advertiser) => {
 
 const check_condition = (data, ALERT_HANDLED, filtered_index) => {
     let satisfies = true;
+    let qualifies = true;
     
-    if (ALERT.price.or_below && (data.price > ALERT.price.amount)) { satisfies = false; }
+    if (ALERT.price.or_below && (data.price > ALERT.price.amount)) { satisfies = false; qualifies = false; }
     
     if (satisfies) {
-        if (ALERT.limit.or_above && (data.min_limit_base > ALERT.limit.amount)) { satisfies = false; }
+        if (ALERT.limit.or_above && (data.min_limit_base > ALERT.limit.amount)) { satisfies = false; qualifies = false; } 
+        else if (ALERT.limit.or_above && (data.max_limit_base < ALERT.limit.amount)) { satisfies = false; qualifies = false; }
     }
 
     // checking if the data exists
@@ -91,7 +95,7 @@ const check_condition = (data, ALERT_HANDLED, filtered_index) => {
     if (satisfies) {
         return { status: true, data: filtered_index };
     }
-    return { status: false };
+    return { status: false, qualifies };
 }
 
 module.exports = { play_sound, send_notification, process_p2p };
