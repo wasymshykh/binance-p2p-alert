@@ -6,9 +6,14 @@ const notifier = require('node-notifier');
 const { ALERT, BASE_UNIT, ASSET_UNIT, SOUNDS } = require('../config');
 const { format_number, chalk } = require('../helpers');
 
-const play_sound = (volume = 0.5, type = 'reward') => {
+const play_sound = (volume = 0.5, type) => {
+    if (type === undefined) {
+        Object.entries(SOUNDS).forEach(([k, v]) => {
+            if (v.default !== undefined && v.default) { type = k; }
+        });
+    }
     if (SOUNDS[type] === undefined) return false;
-    let sound_file = SOUNDS[type];
+    let sound_file = SOUNDS[type].source;
     sound.play(path.join(__dirname, '../', 'assets', 'sound', sound_file), volume);
 }
 

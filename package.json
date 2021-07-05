@@ -29,6 +29,7 @@
     "chalk": "^4.1.1",
     "enquirer": "^2.3.6",
     "node-notifier": "^10.0.0",
+    "nodemon": "^2.0.9",
     "open": "^8.2.0",
     "sound-play": "^1.1.0"
   }

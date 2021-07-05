@@ -125,4 +125,11 @@ const draw_line = (width, type = 'mid') => {
 
 const l = console.log;
 
-module.exports = { chalk, format_number, handle_request_error, l, print_table }
+const clear_screen = () => {
+    const blank = '\n'.repeat(process.stdout.rows);
+    l(blank);
+    readline.cursorTo(process.stdout, 0, 0);
+    readline.clearScreenDown(process.stdout);
+}
+
+module.exports = { chalk, format_number, handle_request_error, l, print_table, clear_screen }
