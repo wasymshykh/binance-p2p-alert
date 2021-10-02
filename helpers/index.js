@@ -1,12 +1,20 @@
 const chalk = require('chalk');
 const readline = require('readline');
+const fs = require('fs-extra')
 
 const format_number = (num, sym) => { 
     return `${Number(num).toLocaleString()} ${sym}` 
 }
 
 const handle_request_error = (error) => { 
-    l((error.code !== undefined ? (`Error Code: ${error.code}`): (error.toJSON !== undefined ? error.toJSON().message : error.toString()))); 
+    let message = JSON.stringify({
+        dt: Date.now(),
+        error: (error.code !== undefined ? (`Error Code: ${error.code}`): (error.toJSON !== undefined ? error.toJSON().message : error.toString()))
+    })+'\n';
+    
+    fs.outputFile('logs/errors.log', message, { flag: 'a' }, err => {
+        if(err) { return }
+    }); 
 }
 
 // text -> any string, width -> number of characters allowed in column

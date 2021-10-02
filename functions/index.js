@@ -86,8 +86,17 @@ const check_condition = (data, ALERT_HANDLED, filtered_index) => {
     if (ALERT.price.or_below && (data.price > ALERT.price.amount)) { satisfies = false; qualifies = false; }
     
     if (satisfies) {
-        if (ALERT.limit.or_above && (data.min_limit_base > ALERT.limit.amount)) { satisfies = false; qualifies = false; } 
-        else if (ALERT.limit.or_above && (data.max_limit_base < ALERT.limit.amount)) { satisfies = false; qualifies = false; }
+        /**
+         * 100 >= 100 && 100 <= 150 = true = true
+         * 1000 >= 100 && 1000 <= 1000 = false = true
+         * 1000 >= 2000 && 1000 <= 2000 = false = true
+         * 100 >= 1 && 100 <= 99 = false = true
+         */
+        if (ALERT.limit.or_above && (ALERT.limit.amount >= data.min_limit_base && ALERT.limit.amount <= data.max_limit_base)) { 
+            satisfies = false; 
+            qualifies = false; 
+        }
+
     }
 
     // checking if the data exists

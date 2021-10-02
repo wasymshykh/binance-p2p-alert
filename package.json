@@ -28,6 +28,7 @@
     "axios": "^0.21.1",
     "chalk": "^4.1.1",
     "enquirer": "^2.3.6",
+    "fs-extra": "^10.0.0",
     "node-notifier": "^10.0.0",
     "nodemon": "^2.0.9",
     "open": "^8.2.0",
