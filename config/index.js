@@ -1,7 +1,7 @@
 // price setup alert // this is default value, but it should be set through command
 const ALERT = { 
-    price: { amount: 162, or_below: true }, 
-    limit: { amount: 10000, or_above: true } 
+    price: { amount: 248, or_below: true }, 
+    limit: { amount: 5000, or_above: false } 
 };
 
 // delay (in second) to request the API
@@ -28,4 +28,6 @@ const SOUNDS = {
     }
 }
 
-module.exports = { ALERT, TIME, BASE_UNIT, ASSET_UNIT, BINANCE_APP, REQUEST_TIMEOUT, SOUNDS }
+const BLOCKED_ADS = ['11385993853325262848'];
+
+module.exports = { ALERT, TIME, BASE_UNIT, ASSET_UNIT, BINANCE_APP, REQUEST_TIMEOUT, SOUNDS, BLOCKED_ADS }

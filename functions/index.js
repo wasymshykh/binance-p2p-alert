@@ -3,7 +3,7 @@ const path = require('path');
 const open = require('open');
 const notifier = require('node-notifier');
 
-const { ALERT, BASE_UNIT, ASSET_UNIT, SOUNDS } = require('../config');
+const { ALERT, BASE_UNIT, ASSET_UNIT, SOUNDS, BLOCKED_ADS } = require('../config');
 const { format_number, chalk } = require('../helpers');
 
 const play_sound = (volume = 0.5, type) => {
@@ -48,13 +48,16 @@ const process_p2p = (response, ALERT_HANDLED, cb) => {
         // { adv: {}, advertiser: {} }
         let d = details_extract(adv, advertiser);
 
-        // checking for satisfied conditions for alert
-        let check = check_condition(d, ALERT_HANDLED, filtered.length);
-        if (check.status) { alerts.push(check.data); }
-        else {
-            d['qualifies'] = check.qualifies;
+        if (!BLOCKED_ADS.includes(adv.advNo)) { 
+            // checking for satisfied conditions for alert
+            let check = check_condition(d, ALERT_HANDLED, filtered.length);
+            if (check.status) { alerts.push(check.data); }
+            else {
+                d['qualifies'] = check.qualifies;
+            }
+            filtered.push(d);
         }
-        filtered.push(d);
+
     });
 
     cb({ status: true, data: { filtered, alerts } });
@@ -69,7 +72,7 @@ const details_extract = (adv, advertiser) => {
         price: Number(adv.price),
         min_limit_base: Number(adv.minSingleTransAmount), max_limit_base: Number(adv.maxSingleTransAmount),
         min_limit_asset: Number(adv.minSingleTransQuantity), max_limit_asset: Number(adv.maxSingleTransQuantity),
-        payment_methods: adv.tradeMethods.map(t => t.payType),
+        payment_methods: adv.tradeMethods.map(t => t.identifier),
     }
     
     d.nice_text = `${d.name} (${BASE_UNIT} → ${ASSET_UNIT}) 💰 ${format_number(d.price, BASE_UNIT)} `;
@@ -95,6 +98,9 @@ const check_condition = (data, ALERT_HANDLED, filtered_index) => {
         if (ALERT.limit.or_above && (ALERT.limit.amount >= data.min_limit_base && ALERT.limit.amount <= data.max_limit_base)) { 
             satisfies = false; 
             qualifies = false; 
+        } else if ((!ALERT.limit.or_above) && (data.min_limit_base > ALERT.limit.amount)) {
+            satisfies = false;
+            qualifies = false;
         }
 
     }

@@ -115,10 +115,23 @@ const print_table = (columns , values, alerts, {BASE_UNIT, ASSET_UNIT}) => {
     }
     alerts_tbl += draw_line (tbl_width, 'end');
 
+    if (config_last.lines > lines) {
+
+        let lines_diff = config_last.lines - lines;
+        for (let i = 0; i < lines_diff; i++) {
+            alerts_tbl += ' '.repeat(tbl_width) + '\n';
+        }
+        
+    } else {
+        config_last.lines = lines;
+    }
+
     process.stdout.write(alerts_tbl);
 
-    config_last.lines = lines;
+}
 
+const reset_table_lines = () => {
+    config_last.lines = 0;
 }
 
 const draw_line = (width, type = 'mid') => {
@@ -140,4 +153,4 @@ const clear_screen = () => {
     readline.clearScreenDown(process.stdout);
 }
 
-module.exports = { chalk, format_number, handle_request_error, l, print_table, clear_screen }
+module.exports = { chalk, format_number, handle_request_error, l, print_table, clear_screen, reset_table_lines }
